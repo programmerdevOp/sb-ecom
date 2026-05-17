@@ -3,10 +3,7 @@ package com.sumit.sb_ecommercee.controller;
 import com.sumit.sb_ecommercee.model.Category;
 import com.sumit.sb_ecommercee.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +29,9 @@ public class CategoryController {
     public String createCategory(@RequestBody Category category){
         categoryService.createCategory(category);
         return "New Category Added Successfully";
+    }
+
+    public void deleteCategory(@PathVariable Long categoryId){
+        categoryService.deleteCategory(categoryId);
     }
 }
