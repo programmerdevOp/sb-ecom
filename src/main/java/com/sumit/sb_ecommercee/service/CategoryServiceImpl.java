@@ -1,6 +1,7 @@
 package com.sumit.sb_ecommercee.service;
 
 import com.sumit.sb_ecommercee.model.Category;
+import com.sumit.sb_ecommercee.repository.CategoryRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,22 +16,25 @@ public class CategoryServiceImpl implements CategoryService{
 
     private Long nextId = 1L;
 
-    private List<Category> categories
-            = new ArrayList<>();
+    private CategoryRepository categoryRepository;
+
+    //private List<Category> categories
+    //        = new ArrayList<>();
 
     @Override
     public List<Category> getAllCategories() {
-        return categories;
+        return categoryRepository.findAll();
     }
 
     @Override
     public void createCategory(Category category) {
         category.setCategoryId(nextId++);
-        categories.add(category);
+        categoryRepository.save(category);
     }
 
     @Override
     public String deleteCategory(Long categoryId) {
+        List<Category> categories = categoryRepository.findAll();
         Category category = categories.stream()
                 .filter( c -> c.getCategoryId().equals(categoryId))
                 .findFirst()
@@ -40,7 +44,8 @@ public class CategoryServiceImpl implements CategoryService{
 //            return "Category is not found by this id";
 //        }
 
-        categories.remove(category);
+        //categories.remove(category);
+        categoryRepository.delete(category);
         return "Category with Id: " + categoryId + "founded successfully";
     }
 
@@ -58,6 +63,7 @@ public class CategoryServiceImpl implements CategoryService{
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found");
 //        }
 
+        List<Category> categories =categoryRepository.findAll();
         Optional<Category> categoryToUpdate = categories.stream()
                 .filter(c -> c.getCategoryId().equals(categoryId))
                 .findFirst();
