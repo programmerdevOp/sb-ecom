@@ -46,18 +46,29 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category updateCategory(Category category, Long categoryId) {
-        Optional<Category> categoryToUpdate =  categories.stream()
+//        Optional<Category> categoryToUpdate =  categories.stream()
+//                .filter(c -> c.getCategoryId().equals(categoryId))
+//                .findFirst();
+//
+//        if(categoryToUpdate.isPresent()){
+//            Category existingCategory = categoryToUpdate.get();
+//            existingCategory.setCategoryName(category.getCategoryName());
+//            return existingCategory;
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found");
+//        }
+
+        Optional<Category> categoryToUpdate = categories.stream()
                 .filter(c -> c.getCategoryId().equals(categoryId))
                 .findFirst();
 
         if(categoryToUpdate.isPresent()){
-            Category existingCategory = categoryToUpdate.get();
+            Category existingCategory =  categoryToUpdate.get();
             existingCategory.setCategoryName(category.getCategoryName());
             return existingCategory;
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
         }
-
     }
 
 
