@@ -2,6 +2,7 @@ package com.sumit.sb_ecommercee.controller;
 
 import com.sumit.sb_ecommercee.model.Category;
 import com.sumit.sb_ecommercee.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@RequestBody Category category){
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category){
         categoryService.createCategory(category);
         return new ResponseEntity<>("New Category Added Successfully", HttpStatus.CREATED);
     }
