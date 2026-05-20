@@ -1,5 +1,7 @@
 package com.sumit.sb_ecommercee.service;
 
+import com.sumit.sb_ecommercee.exception.APIException;
+import com.sumit.sb_ecommercee.exception.ResourceNotFoundException;
 import com.sumit.sb_ecommercee.model.Category;
 import com.sumit.sb_ecommercee.repository.CategoryRepository;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,10 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public void createCategory(Category category) {
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if(savedCategory != null){
+            throw new APIException("Category with the name " + category.getCategoryName() + " already exists!!!");
+        }
         //category.setCategoryId(nextId++);
         categoryRepository.save(category);
     }
@@ -36,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService{
     public String deleteCategory(Long categoryId) {
 
         Category categoryToDelete = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         categoryRepository.delete(categoryToDelete);
         return "Category with Id: " + categoryId + "founded successfully";
@@ -84,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService{
         Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
 
         Category savedCategory =  savedCategoryOptional.orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+                () -> new ResourceNotFoundException("Category", "categoryId", categoryId)
         );
 
         //savedCategory.setCategoryName(category.getCategoryName());
