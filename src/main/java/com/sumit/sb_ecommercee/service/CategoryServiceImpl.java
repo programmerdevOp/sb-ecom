@@ -3,7 +3,11 @@ package com.sumit.sb_ecommercee.service;
 import com.sumit.sb_ecommercee.exception.APIException;
 import com.sumit.sb_ecommercee.exception.ResourceNotFoundException;
 import com.sumit.sb_ecommercee.model.Category;
+import com.sumit.sb_ecommercee.payload.CategoryDTO;
+import com.sumit.sb_ecommercee.payload.CategoryResponse;
 import com.sumit.sb_ecommercee.repository.CategoryRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,17 +20,31 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
-
+    @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private final ModelMapper modelMapper;
+
+    public CategoryServiceImpl(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
 
     @Override
-    public List<Category> getAllCategories() {
+    public CategoryResponse getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         if(categories.isEmpty()){
-            throw new APIException("Category is empty");
+            throw new APIException("No category created till now");
         }
-        return categories;
+
+        List<CategoryDTO> categoryDTOS = categories.stream()
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .toList();
+
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setContent(categoryDTOS);
+        return categoryResponse;
     }
 
     @Override
