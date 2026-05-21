@@ -1,6 +1,7 @@
 package com.sumit.sb_ecommercee.service;
 
 import com.sumit.sb_ecommercee.model.Category;
+import com.sumit.sb_ecommercee.payload.CategoryDTO;
 import com.sumit.sb_ecommercee.payload.CategoryResponse;
 
 import java.util.List;
@@ -9,9 +10,9 @@ public interface CategoryService {
 
     CategoryResponse getAllCategories();
 
-    void createCategory(Category category);
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
 
     String deleteCategory(Long categoryId);
 
-    Category updateCategory(Category category, Long categoryId);
+    CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId);
 }
