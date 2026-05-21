@@ -8,6 +8,9 @@ import com.sumit.sb_ecommercee.payload.CategoryResponse;
 import com.sumit.sb_ecommercee.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +36,10 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
-        List<Category> categories = categoryRepository.findAll();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize);
+        Page<Category> categoryPage = categoryRepository.findAll(pageDetails);
+        List<Category> categories = categoryPage.getContent();
         if(categories.isEmpty()){
             throw new APIException("No category created till now");
         }
@@ -44,6 +50,11 @@ public class CategoryServiceImpl implements CategoryService{
 
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setContent(categoryDTOS);
+        categoryResponse.setPageNumber(categoryResponse.getPageNumber());
+        categoryResponse.setPageSize(categoryResponse.getPageSize());
+        categoryResponse.setTotalElements(categoryResponse.getTotalElements());
+        categoryResponse.setTotalPages(categoryResponse.getTotalPages());
+        categoryResponse.setLastPage(categoryResponse.isLastPage());
         return categoryResponse;
     }
 
