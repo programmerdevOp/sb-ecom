@@ -76,21 +76,34 @@ public class CategoryServiceImpl implements CategoryService{
 
 
     @Override
-    public String deleteCategory(Long categoryId) {
+    public CategoryDTO deleteCategory(Long categoryId) {
 
-        Category categoryToDelete = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("category","categoryId",categoryId));
 
-        categoryRepository.delete(categoryToDelete);
-        return "Category with Id: " + categoryId + "founded successfully";
+        categoryRepository.delete(category);
+        return modelMapper.map(category, CategoryDTO.class);
+
+//        Category categoryToDelete = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
+//
+//        categoryRepository.delete(categoryToDelete);
+//        return "Category with Id: " + categoryId + "founded successfully";
     }
 
     @Override
     public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId) {
 
-        Category category = modelMapper.map(categoryDTO, Category.class);
-        Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
-        Category takeOutCategory = savedCategoryOptional.get();
+//        Category category = modelMapper.map(categoryDTO, Category.class);
+//        Optional<Category> savedCategoryOptional = categoryRepository.findById(categoryId);
+//        Category takeOutCategory = savedCategoryOptional.get();
+//
+//        takeOutCategory.setCategoryId(categoryDTO.getCategoryId());
+//        takeOutCategory.setCategoryName(categoryDTO.getCategoryName());
+//
+//        Category savedCategory = categoryRepository.save(takeOutCategory);
+//        CategoryDTO savedCategoryDTO = modelMapper.map(savedCategory, CategoryDTO.class);
+//        return savedCategoryDTO;
 
 //        Category savedCategory =  savedCategoryOptional.orElseThrow(
 //                () -> new ResourceNotFoundException("Category", "categoryId", categoryId)
@@ -100,11 +113,12 @@ public class CategoryServiceImpl implements CategoryService{
         //savedCategory = categoryRepository.save(category);
         //return savedCategory;
 
-        takeOutCategory.setCategoryId(categoryDTO.getCategoryId());
-        takeOutCategory.setCategoryName(categoryDTO.getCategoryName());
 
-        Category savedCategory = categoryRepository.save(takeOutCategory);
-        CategoryDTO savedCategoryDTO = modelMapper.map(savedCategory, CategoryDTO.class);
-        return savedCategoryDTO;
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() ->  new APIException("category not found"));
+        
+        category.setCategoryName(categoryDTO.getCategoryName());
+        Category savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 }
