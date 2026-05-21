@@ -25,6 +25,11 @@ public class CategoryController {
 
     //public List<Category> categories = new ArrayList<>();
 
+    @GetMapping("/echo")
+    public ResponseEntity<String> echoMessage(@RequestParam(name = "message", required = false) String message){
+        return new ResponseEntity<>("Echoed Message"+  message, HttpStatus.OK);
+    }
+
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponse> getAllCategories(){
         CategoryResponse allCategories =  categoryService.getAllCategories();
