@@ -4,11 +4,16 @@ import com.sumit.sb_ecommercee.exception.ResourceNotFoundException;
 import com.sumit.sb_ecommercee.model.Category;
 import com.sumit.sb_ecommercee.model.Product;
 import com.sumit.sb_ecommercee.payload.ProductDTO;
+import com.sumit.sb_ecommercee.payload.ProductResponse;
 import com.sumit.sb_ecommercee.repository.CategoryRepository;
 import com.sumit.sb_ecommercee.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class ProductServiceImpl implements ProductService{
 
     @Autowired
@@ -39,5 +44,17 @@ public class ProductServiceImpl implements ProductService{
         Product savedProduct = productRepository.save(product);
 
         return modelMapper.map(savedProduct, ProductDTO.class);
+    }
+
+    @Override
+    public ProductResponse getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> productDTO =  products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTO);
+        return productResponse;
     }
 }
